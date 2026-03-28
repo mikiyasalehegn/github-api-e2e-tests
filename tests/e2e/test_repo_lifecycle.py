@@ -1,6 +1,9 @@
+from http.client import responses
+
 from base import BaseTest
 from api import RepositoryApi
 from models import CreateRepoData, create_repo_schema, CreateRepoResponse, UpdateRepoData
+from models.repo_data_schema.repo_testing_data import GetRepoResponse
 from test_data import RepoTestData, UserTestData
 from utils import assert_data_schema
 
@@ -38,6 +41,22 @@ class TestRepoLifecycle(BaseTest):
         assert create_repo_res.name == RepoTestData.new_repo_name
         assert create_repo_res.description == RepoTestData.new_repo_description
 
-    # def test_delete_repository(self):
+    def test_get_a_repository(self):
+        response = self.repo_api.delete_repo(owner=UserTestData.user_name, repo_name=RepoTestData.new_repo_name)
+        get_repo_data = GetRepoResponse(response.json())
+        get_repo_schema = create_repo_schema
+
+        assert response.status_code == 200
+        assert_data_schema(response, get_repo_schema)
+        assert get_repo_data.name == RepoTestData.new_repo_name
+        assert get_repo_data.owner == UserTestData.user_name
+
+    def test_delete_repository(self):
+        response = self.repo_api.delete_repo(owner=UserTestData.user_name, repo_name=RepoTestData.new_repo_name)
+        assert response.status_code == 204
+
+        # assert using get repo request
+        resp = self.repo_api.delete_repo(owner=UserTestData.user_name, repo_name=RepoTestData.new_repo_name)
+        assert response.status_code == 404
 
 
