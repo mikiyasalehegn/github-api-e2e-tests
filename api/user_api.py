@@ -1,5 +1,3 @@
-from api import GitHubClient
-
 
 class UserApi:
     def __init__(self, client):
