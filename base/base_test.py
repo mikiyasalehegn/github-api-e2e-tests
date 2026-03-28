@@ -8,11 +8,9 @@ load_dotenv()
 
 class BaseTest:
 
-    @pytest.fixture(autouse=True)
-    def setup(self):
+    def setup_method(self):
         self.base_url = os.getenv("BASE_URL")
         self.default_token = os.getenv("TOKEN")
-
 
     def get_client(self, token=None):
         """Factory method to create client with any token"""
