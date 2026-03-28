@@ -12,7 +12,7 @@ class RepositoryApi:
         return self.client.get("/user/repos")
 
     def update_repository(self, owner, repo, data):
-        return self.client.patch(f"/{owner}/{repo}", data)
+        return self.client.patch(f"/repos/{owner}/{repo}", data)
 
     def delete_repo(self, owner, repo_name):
         return self.client.delete(f"/repos/{owner}/{repo_name}")
