@@ -36,5 +36,5 @@ class CreateRepoResponse:
     def __init__(self, response_json):
         self.name = response_json.get("name")
         self.description = response_json.get("description")
-        self.path = response_json.get("path")
+        self.path = response_json.get("homepage")
         self.private = response_json.get("private")
