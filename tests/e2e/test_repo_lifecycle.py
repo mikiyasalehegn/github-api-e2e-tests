@@ -1,5 +1,4 @@
-from http.client import responses
-
+import time
 from base import BaseTest
 from api import RepositoryApi
 from models import CreateRepoData, create_repo_schema, CreateRepoResponse, UpdateRepoData
@@ -30,6 +29,7 @@ class TestRepoLifecycle(BaseTest):
         assert create_repo_res.private == False
 
     def test_update_repository(self):
+        time.sleep(2)
         payload = UpdateRepoData(new_repo_name=RepoTestData.new_repo_name,
                                  new_description=RepoTestData.new_repo_description)
         response = self.repo_api.update_repository(owner=UserTestData.user_name, repo=RepoTestData.repo_name,
@@ -42,7 +42,8 @@ class TestRepoLifecycle(BaseTest):
         assert create_repo_res.description == RepoTestData.new_repo_description
 
     def test_get_a_repository(self):
-        response = self.repo_api.delete_repo(owner=UserTestData.user_name, repo_name=RepoTestData.new_repo_name)
+        time.sleep(2)
+        response = self.repo_api.get_repository(owner=UserTestData.user_name, repo=RepoTestData.new_repo_name)
         get_repo_data = GetRepoResponse(response.json())
         get_repo_schema = create_repo_schema
 
@@ -52,11 +53,10 @@ class TestRepoLifecycle(BaseTest):
         assert get_repo_data.owner == UserTestData.user_name
 
     def test_delete_repository(self):
+        time.sleep(2)
         response = self.repo_api.delete_repo(owner=UserTestData.user_name, repo_name=RepoTestData.new_repo_name)
         assert response.status_code == 204
 
         # assert using get repo request
-        resp = self.repo_api.delete_repo(owner=UserTestData.user_name, repo_name=RepoTestData.new_repo_name)
-        assert response.status_code == 404
-
-
+        resp = self.repo_api.get_repository(owner=UserTestData.user_name, repo=RepoTestData.new_repo_name)
+        assert resp.status_code == 404
