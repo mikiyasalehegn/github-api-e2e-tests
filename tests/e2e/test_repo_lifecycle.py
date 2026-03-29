@@ -4,7 +4,7 @@ from api import RepositoryApi
 from models import CreateRepoData, create_repo_schema, CreateRepoResponse, UpdateRepoData
 from models.repo_data_schema.repo_testing_data import GetRepoResponse
 from test_data import RepoTestData, UserTestData
-from utils import assert_data_schema
+from utils import assert_data_schema, slow_down
 
 
 class TestRepoLifecycle(BaseTest):
@@ -28,6 +28,7 @@ class TestRepoLifecycle(BaseTest):
         assert create_repo_res.path == RepoTestData.homepage
         assert create_repo_res.private == False
 
+    @slow_down(2)
     def test_update_repository(self):
         time.sleep(2)
         payload = UpdateRepoData(new_repo_name=RepoTestData.new_repo_name,
@@ -41,6 +42,7 @@ class TestRepoLifecycle(BaseTest):
         assert create_repo_res.name == RepoTestData.new_repo_name
         assert create_repo_res.description == RepoTestData.new_repo_description
 
+    @slow_down(2)
     def test_get_a_repository(self):
         time.sleep(2)
         response = self.repo_api.get_repository(owner=UserTestData.user_name, repo=RepoTestData.new_repo_name)
@@ -52,6 +54,7 @@ class TestRepoLifecycle(BaseTest):
         assert get_repo_data.name == RepoTestData.new_repo_name
         assert get_repo_data.owner == UserTestData.user_name
 
+    @slow_down(2)
     def test_delete_repository(self):
         time.sleep(2)
         response = self.repo_api.delete_repo(owner=UserTestData.user_name, repo_name=RepoTestData.new_repo_name)
