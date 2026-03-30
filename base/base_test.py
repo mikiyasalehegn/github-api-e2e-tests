@@ -1,16 +1,12 @@
 from api import GitHubClient
-import os
-import pytest
-from dotenv import load_dotenv
-
-load_dotenv()
+from utils.config import BASE_URL, TOKEN
 
 
 class BaseTest:
 
     def setup_method(self):
-        self.base_url = os.getenv("BASE_URL")
-        self.default_token = os.getenv("TOKEN")
+        self.base_url = BASE_URL
+        self.default_token = TOKEN
 
     def get_client(self, token=None):
         """Factory method to create client with any token"""
