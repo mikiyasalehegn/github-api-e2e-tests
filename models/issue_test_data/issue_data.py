@@ -31,4 +31,27 @@ class IssueTestData:
     body = "Github API Automation Test Run!"
     title = "Test Github Issue"
     labels = ["automated-test", "QA-internal"]
+    new_label = ["bug"]
+    new_body = "Create repository test is failing"
+    new_title = "Create repo bug",
+    lock_reason= {
+        "lock_reason": "resolved"
+    }
+    update_issue_payload = {
+        "title": new_title,
+        "body": new_body
+    }
 
+
+class UpdateIssuePayload:
+    def __init__(self, body, labels: list[str]):
+        # self.title = title
+        self.body = body
+        self.labels = labels
+
+    def to_dict(self):
+        return {
+            # "title": self.title,
+            "body": self.body,
+            "labels": self.labels
+        }
