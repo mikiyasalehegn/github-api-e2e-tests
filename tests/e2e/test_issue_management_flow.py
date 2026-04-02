@@ -1,5 +1,4 @@
 import time
-
 import pytest
 from api.issue_api import IssueApi
 from base import BaseTest
