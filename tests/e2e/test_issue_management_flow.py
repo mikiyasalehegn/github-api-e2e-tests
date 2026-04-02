@@ -71,14 +71,21 @@ class TestIssueManagementFlow(BaseTest):
         time.sleep(2)
 
         # -------------------- Test lock issue --------------------
-        # response = self.issue_api.lock_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number,
-        #                                      data = IssueTestData.lock_reason)
-        # logger.info(f"Lock issue response data {response.text}")
-        #
-        # assert response.status_code == 204
-        # get_locked_issue = self.issue_api.get_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number)
-        # assert get_locked_issue.status_code == 200
-        # assert get_locked_issue.json()["locked"] == True
+        response = self.issue_api.lock_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number,
+                                             data = IssueTestData.lock_reason)
+        logger.info(f"Lock issue response data {response.text}")
+
+        assert response.status_code == 204
+        get_locked_issue = self.issue_api.get_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number)
+        assert get_locked_issue.status_code == 200
+        assert get_locked_issue.json()["locked"] == True
+
+        # -------------------- Test unlock issue --------------------
+        response = self.issue_api.unlock_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number,)
+        assert response.status_code == 204
+        get_unlocked_issue = self.issue_api.get_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number)
+        assert get_unlocked_issue.status_code == 200
+        assert get_unlocked_issue.json()["locked"] == False
 
 
 
