@@ -26,7 +26,7 @@ class TestWebhookFlow(BaseTest):
         # get uuid
         uuid = CreateWebhookData.create_uuid()
 
-         # Test create webhook
+         # -------------------- Test create webhook --------------------
         repository_name = create_temporary_repo
         payload = CreateWebhookData(name="web", uuid=uuid)
         response = self.webhook_api.create_github_webhook(owner=USERNAME, repo=repository_name, data=payload.to_dict())
@@ -38,13 +38,13 @@ class TestWebhookFlow(BaseTest):
         assert webhook_resp.name == "web"
         self.webhook_id = webhook_resp.id
 
-        # Test if the repo exists
+        # -------------------- Test if the repo exists --------------------
         response = self.webhook_api.get_github_webhook(owner=USERNAME, repo=repository_name, hook_id=self.webhook_id)
         assert response.status_code == 200
         assert_data_schema(response, create_webhook_schema)
 
 
-        # Test update webhook
+        # -------------------- Test update webhook --------------------
         update_resp = self.webhook_api.update_github_webhook(owner=USERNAME, repo=repository_name,
                                                              hook_id=webhook_resp.id, data=update_webhook_data)
         update_webhook_resp = UpdateWebhookResponse(update_resp.json())
@@ -54,4 +54,21 @@ class TestWebhookFlow(BaseTest):
         assert update_resp.json().get("type") == "Repository"
         assert update_resp.json().get("name") == "web"
         assert update_webhook_resp.events == update_webhook_data["add_events"]
+
+
+        # -------------------- Test ping webhook --------------------
+        ping_resp = self.webhook_api.ping_webhook(owner=USERNAME, repo=repository_name, hook_id=self.webhook_id)
+        print(f"Ping[{self.webhook_id}] response: {ping_resp}")
+        assert ping_resp.status_code == 204
+
+        # -------------------- Test delete webhook --------------------
+        delete_webhook_resp = self.webhook_api.delete_github_webhook(owner=USERNAME, repo=repository_name,
+                                                                     hook_id=self.webhook_id)
+        delete_webhook_resp.status_code = 204
+
+
+        # --------------------Verify the webhook is deleted --------------------Verify
+        get_webhook_resp = self.webhook_api.get_github_webhook(owner=USERNAME, repo=repository_name,
+                                                               hook_id=self.webhook_id)
+        get_webhook_resp.status_code = 404
 
