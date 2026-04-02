@@ -18,5 +18,8 @@ class GitHubClient:
     def patch(self, endpoint, payload):
         return requests.patch(self.base_url + endpoint, json=payload, headers=self.headers)
 
+    def put(self, endpoint, payload):
+        return requests.put(self.base_url + endpoint, json=payload, headers=self.headers)
+
     def delete(self, endpoint):
         return requests.delete(self.base_url + endpoint, headers=self.headers)
