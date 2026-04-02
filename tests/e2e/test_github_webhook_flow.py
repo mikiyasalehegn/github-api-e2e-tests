@@ -31,7 +31,7 @@ class TestWebhookFlow(BaseTest):
         payload = CreateWebhookData(name="web", uuid=uuid)
         response = self.webhook_api.create_github_webhook(owner=USERNAME, repo=repository_name, data=payload.to_dict())
         webhook_resp = CreateWebhookResponse(response.json())
-
+        logger.info(f"create webhook response: {response.text}")
         assert response.status_code == 201
         assert_data_schema(response, create_webhook_schema)
         assert webhook_resp.type == "Repository"
@@ -42,4 +42,16 @@ class TestWebhookFlow(BaseTest):
         response = self.webhook_api.get_github_webhook(owner=USERNAME, repo=repository_name, hook_id=self.webhook_id)
         assert response.status_code == 200
         assert_data_schema(response, create_webhook_schema)
+
+
+        # Test update webhook
+        update_resp = self.webhook_api.update_github_webhook(owner=USERNAME, repo=repository_name,
+                                                             hook_id=webhook_resp.id, data=update_webhook_data)
+        update_webhook_resp = UpdateWebhookResponse(update_resp.json())
+
+        update_resp.status_code = 200
+        logger.info(f"update webhook response: {update_resp.text}")
+        assert update_resp.json().get("type") == "Repository"
+        assert update_resp.json().get("name") == "web"
+        assert update_webhook_resp.events == update_webhook_data["add_events"]
 
