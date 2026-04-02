@@ -24,7 +24,7 @@ class TestIssueManagementFlow(BaseTest):
 
     def test_create_issue(self, create_temporary_repo):
 
-        # -------------------- Test create webhook --------------------
+        # -------------------- Test create issue --------------------
 
         issue_repo_name = create_temporary_repo
         payload = CreateIssuePayload(title=IssueTestData.title, body=IssueTestData.body,
@@ -44,14 +44,11 @@ class TestIssueManagementFlow(BaseTest):
         assert create_issue_resp.assignee["login"] == USERNAME
 
 
-        # -------------------- Test get webhook --------------------
+        # -------------------- Test get issue --------------------
         response = self.issue_api.get_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number)
         logger.info(f"Get issue {response.text}")
         assert response.status_code == 200
 
-
-        # -------------------- Test update webhook --------------------
-        response = self.issue_api.get_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number)
 
 
 
