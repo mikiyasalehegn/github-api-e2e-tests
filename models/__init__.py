@@ -17,3 +17,4 @@ from .issue_test_data.issue_data_schema import create_issue_response_schema
 from .issue_test_data.issue_data import CreateIssuePayload
 from .issue_test_data.issue_data import IssueResponseData
 from .issue_test_data.issue_data import IssueTestData
+from .issue_test_data.issue_data import UpdateIssuePayload
