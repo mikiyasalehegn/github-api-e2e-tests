@@ -15,10 +15,10 @@ class GitHubClient:
     def post(self, endpoint, payload):
         return requests.post(self.base_url + endpoint, json=payload, headers=self.headers)
 
-    def patch(self, endpoint, payload):
+    def patch(self, endpoint, payload=None):
         return requests.patch(self.base_url + endpoint, json=payload, headers=self.headers)
 
-    def put(self, endpoint, payload):
+    def put(self, endpoint, payload=None):
         return requests.put(self.base_url + endpoint, json=payload, headers=self.headers)
 
     def delete(self, endpoint):
