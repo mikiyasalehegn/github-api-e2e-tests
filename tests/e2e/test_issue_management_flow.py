@@ -23,7 +23,7 @@ class TestIssueManagementFlow(BaseTest):
         self.client = self.get_client()
         self.issue_api = IssueApi(self.client)
 
-    def test_create_issue(self, create_temporary_repo):
+    def test_issue_management_flow(self, create_temporary_repo):
 
         # -------------------- Test create issue --------------------
         time.sleep(2)
