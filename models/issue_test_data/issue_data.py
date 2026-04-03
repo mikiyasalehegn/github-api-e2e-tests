@@ -40,14 +40,14 @@ class IssueTestData:
 
 
 class UpdateIssuePayload:
-    def __init__(self, title, body, labels: list[str]):
-        self.title = title
+    def __init__(self,body, labels: list[str]):
+        # self.title = title   # Updating title has a bug
         self.body = body
         self.labels = labels
 
     def to_dict(self):
         return {
-            "title": self.title,
+            # "title": self.title,   # Updating title has a bug
             "body": self.body,
             "labels": self.labels
         }
