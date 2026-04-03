@@ -54,7 +54,7 @@ class TestIssueManagementFlow(BaseTest):
 
 
         # -------------------- Test update issue --------------------
-        payload = UpdateIssuePayload(body=IssueTestData.new_body,
+        payload = UpdateIssuePayload(title= IssueTestData.new_title, body=IssueTestData.new_body,
                                      labels=IssueTestData.new_label)
         response = self.issue_api.update_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number,
                                                data=payload.to_dict())
@@ -64,7 +64,7 @@ class TestIssueManagementFlow(BaseTest):
         logger.info(f"Update issue response {response.text}")
         assert response.status_code == 200
         assert_data_schema(response, update_issue_response_schema)
-        # assert update_issue_response.title == IssueTestData.new_title
+        assert update_issue_response.title == IssueTestData.new_title
         assert update_issue_response.body == IssueTestData.new_body
         assert update_issue_response.labels[0]["name"] == IssueTestData.new_label[0]
 
@@ -86,8 +86,4 @@ class TestIssueManagementFlow(BaseTest):
         get_unlocked_issue = self.issue_api.get_issue(owner=USERNAME, repo=issue_repo_name, issue_number=self.issue_number)
         assert get_unlocked_issue.status_code == 200
         assert get_unlocked_issue.json()["locked"] == False
-
-
-
-
 
