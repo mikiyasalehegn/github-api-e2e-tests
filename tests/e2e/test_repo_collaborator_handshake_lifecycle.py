@@ -52,3 +52,19 @@ class TestRepoCollaboratorHandshakeFlow(BaseTest):
         assert add_repo_collab_response.json()["invitee"]["login"] == COLLABORATOR
         invitation_id=add_repo_collab_response.json()["id"]
 
+        # -------------------- Accept invitation --------------------
+
+        invitation_client = self.get_client(token=COLLABORATOR_TOKEN)
+        accept_invitation_api = InvitationApi(invitation_client)
+        accept_invitation_response = accept_invitation_api.accept_invitation(invitation_id=invitation_id)
+        logger.info(f"accept_invitation response: {accept_invitation_response.text}")
+
+        assert accept_invitation_response.status_code == 204
+
+        # -------------------- check if the collaborator is added --------------------
+        time.sleep(1)
+        collaborators = self.check_repo_collaborators(expected_collabs=2, repo_name=collab_temp_repo,
+                                                      iscollabadded = True)
+        assert USERNAME in collaborators
+        assert COLLABORATOR in collaborators
+
