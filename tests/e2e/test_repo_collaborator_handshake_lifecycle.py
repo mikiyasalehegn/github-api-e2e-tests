@@ -32,7 +32,7 @@ class TestRepoCollaboratorHandshakeFlow(BaseTest):
                                                                                   username=COLLABORATOR)
             assert check_repo_collab_resp.status_code == 204
 
-        return collabs if expected_collabs > 1 else None
+        return collabs
 
 
     def test_repo_collaborator_handshake_flow(self, create_temporary_repo):
@@ -62,9 +62,19 @@ class TestRepoCollaboratorHandshakeFlow(BaseTest):
         assert accept_invitation_response.status_code == 204
 
         # -------------------- check if the collaborator is added --------------------
-        time.sleep(1)
         collaborators = self.check_repo_collaborators(expected_collabs=2, repo_name=collab_temp_repo,
                                                       iscollabadded = True)
         assert USERNAME in collaborators
         assert COLLABORATOR in collaborators
+
+        # -------------------- Remove repo collaborator --------------------
+
+        remove_repo_collab_response = self.repo_collab_api.remove_repo_collaborator(owner=USERNAME, repo=collab_temp_repo,
+                                                                                    username=COLLABORATOR)
+        assert remove_repo_collab_response.status_code == 204
+
+        # -------------------- check if the collaborator is removed --------------------
+        collaborators = self.check_repo_collaborators(expected_collabs=1, repo_name=collab_temp_repo)
+        assert USERNAME in collaborators
+        assert COLLABORATOR not in collaborators
 
