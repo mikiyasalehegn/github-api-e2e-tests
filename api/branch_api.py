@@ -9,8 +9,8 @@ class BranchApi:
     def get_branch(self, owner, repo, branch='main'):
         return self.client.get(f"/repos/{owner}/{repo}/branches/{branch}")
 
-    def create_branch(self, owner, repo, branch='main', data=None):
-        return self.client.post(f"/repos/{owner}/{repo}/git/ref", data)
+    def create_branch(self, owner, repo, data=None):
+        return self.client.post(f"//repos/{owner}/{repo}/git/refs", data)
 
     def update_branch_protection(self, owner, repo, branch='main', data=None):
         return self.client.put(f"/repos/{owner}/{repo}/branches/{branch}/protection", data)

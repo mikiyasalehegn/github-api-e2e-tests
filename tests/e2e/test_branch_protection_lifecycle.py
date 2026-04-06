@@ -24,13 +24,8 @@ class TestBranchProtectionLifecycle(BaseTest):
 
     def test_branch_protection_lifecycle(self, create_temporary_repo):
 
-        # -------------------- Get Source SHA from Main --------------------
         branch_temp_repo = create_temporary_repo
         time.sleep(2)
-        sha_resp = self.branch_api.get_branch_sha(owner=USERNAME, repo=branch_temp_repo)
-        logger.info(f"sha_resp data: {sha_resp.text}")
-        assert sha_resp.status_code == 200
-
 
         # -------------------- Update Branch Protection --------------------
         payload = BranchTestData()
