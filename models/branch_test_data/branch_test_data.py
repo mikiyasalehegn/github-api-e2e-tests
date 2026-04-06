@@ -1,3 +1,6 @@
+from importlib.util import source_hash
+
+
 class BranchTestData:
 
     def __init__(self, enforce_admins=True, allow_force_pushes=True,
@@ -28,6 +31,17 @@ class BranchTestResponse:
         self.allow_force_pushes = response_json.get("allow_force_pushes")
         self.allow_deletions = response_json.get("allow_deletions")
 
+
+class CreateBranchTestData:
+    def __init__(self, name, source_sha):
+        self.name = name
+        self.source_sha = source_sha
+
+    def to_dict(self):
+       return {
+            "ref": f"refs/heads/{self.name}", # Required format
+            "sha": self.source_sha
+        }
 
 
 
