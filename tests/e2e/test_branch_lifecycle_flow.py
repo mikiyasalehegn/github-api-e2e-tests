@@ -29,8 +29,20 @@ class TestBranchLifecycleFlow(BaseTest):
         assert sha_resp.status_code == 200
         source_sha = sha_resp.json()["object"]["sha"]
 
+        # -------------------- Create Branch from Main --------------------
+        payload = CreateBranchTestData(name=BranchTestData.branch_name, source_sha=source_sha)
+        create_branch_resp = self.branch_api.create_branch(owner=USERNAME, repo=branch_temp_repo, data=payload.to_dict())
+        logger.info(f"create_branch_resp data: {create_branch_resp.text}")
+        assert create_branch_resp.status_code == 201
+        assert create_branch_resp.json()["object"]["sha"] == source_sha
 
 
+        # -------------------- Rename Branch --------------------
+        rename_branch_resp = self.branch_api.rename_branch(owner=USERNAME, repo=branch_temp_repo,
+                                                           branch=BranchTestData.branch_name,
+                                                           data={"new_name": BranchTestData.new_branch_name})
+        logger.info(f"rename_branch_resp data: {rename_branch_resp.text}")
+        assert rename_branch_resp.status_code == 201
 
 
 

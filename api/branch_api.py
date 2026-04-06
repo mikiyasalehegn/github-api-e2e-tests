@@ -20,3 +20,6 @@ class BranchApi:
 
     def delete_branch_protection(self, owner, repo, branch='main'):
         return self.client.delete(f"/repos/{owner}/{repo}/branches/{branch}/protection")
+
+    def rename_branch(self, owner, repo, data, branch='main'):
+        return self.client.post(f"/repos/{owner}/{repo}/branches/{branch}/rename", data)
