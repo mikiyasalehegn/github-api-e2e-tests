@@ -1,7 +1,7 @@
 from importlib.util import source_hash
 
 
-class BranchTestData:
+class BranchProtectionTestData:
 
     def __init__(self, enforce_admins=True, allow_force_pushes=True,
                  allow_deletions=True, required_status_checks=None, review_count=1):
@@ -30,6 +30,11 @@ class BranchTestResponse:
         self.status_checks = response_json.get("status_checks")
         self.allow_force_pushes = response_json.get("allow_force_pushes")
         self.allow_deletions = response_json.get("allow_deletions")
+
+
+class BranchTestData:
+    branch_name = "Feature-branch"
+    new_branch_name = "New-branch"
 
 
 class CreateBranchTestData:

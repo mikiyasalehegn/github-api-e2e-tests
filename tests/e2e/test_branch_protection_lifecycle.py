@@ -4,7 +4,7 @@ from base import BaseTest
 from utils import USERNAME, assert_data_schema
 import time
 import logging
-from models import BranchTestData, update_branch_protection_schema, BranchTestResponse
+from models import BranchProtectionTestData, update_branch_protection_schema, BranchTestResponse
 
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class TestBranchProtectionLifecycle(BaseTest):
         time.sleep(2)
 
         # -------------------- Update Branch Protection --------------------
-        payload = BranchTestData()
+        payload = BranchProtectionTestData()
         update_protection_resp = self.branch_api.update_branch_protection(owner=USERNAME, repo=branch_temp_repo,
                                                                      data=payload.to_dict())
         assert_branch_protection = BranchTestResponse(update_protection_resp.json())

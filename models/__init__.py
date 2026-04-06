@@ -18,6 +18,7 @@ from .issue_test_data.issue_data import CreateIssuePayload
 from .issue_test_data.issue_data import IssueResponseData
 from .issue_test_data.issue_data import IssueTestData
 from .issue_test_data.issue_data import UpdateIssuePayload
+from .branch_test_data.branch_test_data import BranchProtectionTestData
 from .branch_test_data.branch_test_data import BranchTestData
 from .branch_test_data.branch_test_data import BranchTestResponse
 from .branch_test_data.branch_test_data import CreateBranchTestData
