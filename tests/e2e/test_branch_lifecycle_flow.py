@@ -19,6 +19,13 @@ class TestBranchLifecycleFlow(BaseTest):
         self.client = self.get_client()
         self.branch_api = BranchApi(self.client)
 
+    def check_the_branch_exists(self, owner, repo, branch):
+        get_branch_resp = self.branch_api.get_branch(owner=owner, repo=repo,
+                                                     branch=branch)
+        logger.info(f"get_branch_resp data: {get_branch_resp.text}")
+
+        return get_branch_resp
+
     def test_branch_lifecycle_flow(self, create_temporary_repo):
 
         # -------------------- Get Source SHA from Main --------------------
@@ -43,6 +50,36 @@ class TestBranchLifecycleFlow(BaseTest):
                                                            data={"new_name": BranchTestData.new_branch_name})
         logger.info(f"rename_branch_resp data: {rename_branch_resp.text}")
         assert rename_branch_resp.status_code == 201
+        assert rename_branch_resp.json()["name"] == BranchTestData.new_branch_name
+
+
+        # -------------------- Get Branch --------------------
+        get_branch_resp = self.check_the_branch_exists(owner=USERNAME, repo=branch_temp_repo,
+                                                       branch=BranchTestData.new_branch_name)
+        assert get_branch_resp.json()["name"] == BranchTestData.new_branch_name
+
+
+        # -------------------- Merge Branch --------------------
+        # payload = MergeBranchPayload(base=BranchTestData.base_branch_name, head=BranchTestData.new_branch_name,
+        #                              commit_message=BranchTestData.commit_message)
+        merge_branch_resp = self.branch_api.merge_branch(owner=USERNAME, repo=branch_temp_repo, data={
+            "base": "main", "head": BranchTestData.new_branch_name, "commit_message": BranchTestData.commit_message
+        })
+        logger.info(f"merge_branch_resp data: {merge_branch_resp.text}")
+        assert merge_branch_resp.status_code == 204
+
+
+        # -------------------- Delete Branch --------------------
+        delete_branch_resp = self.branch_api.delete_branch(owner=USERNAME, repo=branch_temp_repo,
+                                                           branch_name=BranchTestData.new_branch_name)
+        assert delete_branch_resp.status_code == 204
+
+        # -------------------- Check a branch is erased --------------------
+        get_branch_resp = self.check_the_branch_exists(owner=USERNAME, repo=branch_temp_repo,
+                                                       branch=BranchTestData.new_branch_name)
+        assert get_branch_resp.status_code == 404
+
+
 
 
 
