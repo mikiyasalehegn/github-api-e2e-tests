@@ -23,3 +23,9 @@ class BranchApi:
 
     def rename_branch(self, owner, repo, data, branch='main'):
         return self.client.post(f"/repos/{owner}/{repo}/branches/{branch}/rename", data)
+
+    def merge_branch(self, owner, repo, data):
+        return self.client.post(f"/repos/{owner}/{repo}/merges", data)
+
+    def delete_branch(self, owner, repo, branch_name):
+        return self.client.delete(f"/repos/{owner}/{repo}/git/refs/heads/{branch_name}")

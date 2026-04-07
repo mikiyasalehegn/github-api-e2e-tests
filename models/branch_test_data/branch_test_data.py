@@ -1,6 +1,3 @@
-from importlib.util import source_hash
-
-
 class BranchProtectionTestData:
 
     def __init__(self, enforce_admins=True, allow_force_pushes=True,
@@ -35,6 +32,8 @@ class BranchTestResponse:
 class BranchTestData:
     branch_name = "Feature-branch"
     new_branch_name = "New-branch"
+    base_branch_name = "main"
+    commit_message = "New commit message"
 
 
 class CreateBranchTestData:
@@ -49,6 +48,19 @@ class CreateBranchTestData:
         }
 
 
+class MergeBranchPayload:
+    def __init__(self, base, head, commit_message):
+        self.base = base,
+        self.head = head,
+        self.commit_message = commit_message
+
+
+    def to_dict(self):
+        return {
+            "base": self.base,
+            "head": self.head,
+            "commit_message": self.commit_message
+        }
 
 
 

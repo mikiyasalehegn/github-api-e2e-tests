@@ -22,4 +22,5 @@ from .branch_test_data.branch_test_data import BranchProtectionTestData
 from .branch_test_data.branch_test_data import BranchTestData
 from .branch_test_data.branch_test_data import BranchTestResponse
 from .branch_test_data.branch_test_data import CreateBranchTestData
+from .branch_test_data.branch_test_data import MergeBranchPayload
 from .branch_test_data.branch_data_schema import update_branch_protection_schema
