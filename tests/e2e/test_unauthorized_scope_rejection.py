@@ -27,6 +27,3 @@ class TestUnauthorizedScopeRejection(BaseTest):
         # -------------- Verify that the user is unauthorized --------------
         logger.info(f"Create repo response data {response.text}")
         assert response.status_code == 403
-
-
-
