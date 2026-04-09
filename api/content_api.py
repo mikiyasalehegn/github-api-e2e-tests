@@ -16,4 +16,4 @@ class ContentApi:
         }
 
         # Use your GitHubClient to send the PUT request
-        return self.client.put(f"/repos/{owner}/{repo}/contents/{path}", data=payload)
+        return self.client.put(f"/repos/{owner}/{repo}/contents/{path}", payload=payload)

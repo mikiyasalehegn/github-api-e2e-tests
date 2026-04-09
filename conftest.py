@@ -1,6 +1,6 @@
 import time
 import pytest
-from api import RepositoryApi, GitHubClient, BranchApi
+from api import RepositoryApi, GitHubClient, BranchApi, PullRequestApi, ContentApi
 from models.branch_test_data.branch_test_data import CreateBranchTestData
 from test_data import UserTestData
 
@@ -75,11 +75,9 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
                 owner=UserTestData.user_name,
                 repo=repo_name,
                 path=f"file_{i}.txt",
-                data={
-                    "message": f"Initial commit for {branch_name}",
-                    "content": "SGVsbG8gd29ybGQ=",  # "Hello world" in base64
-                    "branch": branch_name
-                }
+                message=f"Initial commit for {branch_name}",
+                content=f"Unique content for branch {i}",
+                branch=branch_name
             ).raise_for_status()
 
             # 4. Create the Pull Request
@@ -104,3 +102,13 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
         # Cleanup: Deleting the branch automatically closes/cleans up the PR
         for branch in created_branches:
             branch_api.delete_branch(owner=UserTestData.user_name, repo=repo_name, branch_name=branch)
+
+
+@pytest.fixture(scope='class')
+def number_of_branches(request):
+    """
+    This is the missing link. It takes the value from the
+    parametrize decorator and provides it to your other fixtures.
+    """
+    return request.param
+

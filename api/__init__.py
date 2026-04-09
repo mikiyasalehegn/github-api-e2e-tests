@@ -5,3 +5,5 @@ from .webhook_api import WebhookApi
 from .branch_api import BranchApi
 from .repo_collab_api import RepoCollabApi
 from .invitation_api import InvitationApi
+from .pr_api import PullRequestApi
+from .content_api import ContentApi
