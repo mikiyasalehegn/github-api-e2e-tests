@@ -29,3 +29,9 @@ class BranchApi:
 
     def delete_branch(self, owner, repo, branch_name):
         return self.client.delete(f"/repos/{owner}/{repo}/git/refs/heads/{branch_name}")
+
+    def list_branches(self, owner, repo):
+        return self.client.get(f"/repos/{owner}/{repo}/branches")
+
+    def filter_branch(self, owner, repo, state):
+        return self.client.get(f"/repos/{owner}/{repo}/pulls?state={state}")
