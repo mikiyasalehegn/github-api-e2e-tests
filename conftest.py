@@ -1,4 +1,7 @@
 import time
+import uuid
+from importlib.util import source_hash
+
 import pytest
 from api import RepositoryApi, GitHubClient, BranchApi, PullRequestApi, ContentApi
 from models.branch_test_data.branch_test_data import CreateBranchTestData
@@ -50,11 +53,16 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
     branch_api = BranchApi(client)
     pr_api = PullRequestApi(client)  # Assuming you have a PR API class
     content_api = ContentApi(client)  # Needed to create a commit
+    source_sha = None
 
-    # 1. Get Base SHA
-    sha_resp = branch_api.get_branch_sha(owner=UserTestData.user_name, repo=repo_name)
-    sha_resp.raise_for_status()
-    source_sha = sha_resp.json()["object"]["sha"]
+    # 1. Get Base SHA with a small retry or wait
+    max_retries = 3
+    for i in range(max_retries):
+        sha_resp = branch_api.get_branch_sha(owner=UserTestData.user_name, repo=repo_name)
+        if sha_resp.status_code == 200:
+            source_sha = sha_resp.json()["object"]["sha"]
+            break
+        time.sleep(2)
 
     created_branches = []
     created_pr_numbers = []
@@ -112,3 +120,37 @@ def number_of_branches(request):
     """
     return request.param
 
+
+@pytest.fixture
+def feature_branch_ready_for_pr(create_temporary_repo):
+    """
+    Sets up a branch with a unique commit so it's ready to be turned into a PR.
+    """
+    repo_name = create_temporary_repo
+    client = GitHubClient(UserTestData.base_url, UserTestData.token)
+    branch_api = BranchApi(client)
+    branch_name = f"lifecycle-test-{uuid.uuid4().hex[:6]}"
+    source_sha = None
+
+    # 1. Get Base SHA
+    # 1. Get Base SHA with a small retry or wait
+    max_retries = 3
+    for i in range(max_retries):
+        sha_resp = branch_api.get_branch_sha(owner=UserTestData.user_name, repo=repo_name)
+        if sha_resp.status_code == 200:
+            source_sha = sha_resp.json()["object"]["sha"]
+            break
+        time.sleep(2)  # Give GitHub a moment to create the initial commit
+
+    # 2. Create the Branch
+    branch_api.create_branch(
+        owner=UserTestData.user_name,
+        repo=repo_name,
+        data={"ref": f"refs/heads/{branch_name}", "sha": source_sha}
+    ).raise_for_status()
+
+    # Return the info needed for the test
+    yield repo_name, branch_name
+
+    # Cleanup is still handled here
+    branch_api.delete_branch(owner=UserTestData.user_name, repo=repo_name, branch_name=branch_name)

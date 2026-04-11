@@ -14,3 +14,9 @@ class PullRequestApi:
 
     def get_pull_request(self, owner, repo, pr_number):
         return self.client.get(f"/repos/{owner}/{repo}/pulls/{pr_number}")
+
+    def list_pr_files(self, owner, repo, pr_number):
+        return self.client.get(f"/repos/{owner}/{repo}/pulls/{pr_number}/files")
+
+    def update_pull_request(self, owner, repo, pr_number, data):
+        return self.client.put(f"/repos/{owner}/{repo}/pulls/{pr_number}/update-branch", payload=data)

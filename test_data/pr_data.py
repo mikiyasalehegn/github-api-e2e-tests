@@ -1,0 +1,10 @@
+class PullRequestDataTest:
+    file_name = "create_pr.txt"
+    default_content = "This is the default content for this pull request"
+    default_message = "This is the default message for this pull request"
+    default_title = f"Default title for this pull request"
+    file_body = "This file content for automation test"
+    pr_body = "This is the body for this pull request"
+    pr_title = "Pr Title"
+    updated_pr_title = "Updated Title"
+    updated_pr_body = "Updated Body"
