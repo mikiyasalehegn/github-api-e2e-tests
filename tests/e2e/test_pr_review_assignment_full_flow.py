@@ -56,7 +56,6 @@ class TestPRReviewAssignmentFullFlow(BaseTest):
         assert verify_pr_review.status_code == 200
         assert verify_pr_review.json()["users"][0]["login"] == COLLABORATOR
 
-
         # ------------------- remove the review request -------------------
         remove_review_request_resp = self.pr_review_api.remove_pr_review(owner=UserTestData.user_name, repo=repo_name,
                                                                          pr_number=pr_numbers[0],
