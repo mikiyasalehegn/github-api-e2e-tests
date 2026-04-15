@@ -1,12 +1,9 @@
 import time
 import uuid
-from importlib.util import source_hash
-
 import pytest
 from api import RepositoryApi, GitHubClient, BranchApi, PullRequestApi, ContentApi
-from models.branch_test_data.branch_test_data import CreateBranchTestData
 from test_data import UserTestData
-
+from utils import USERNAME
 
 
 @pytest.fixture(scope='class', autouse=True)
@@ -58,7 +55,7 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
     # 1. Get Base SHA with a small retry or wait
     max_retries = 3
     for i in range(max_retries):
-        sha_resp = branch_api.get_branch_sha(owner=UserTestData.user_name, repo=repo_name)
+        sha_resp = branch_api.get_branch_sha(owner=USERNAME, repo=repo_name)
         if sha_resp.status_code == 200:
             source_sha = sha_resp.json()["object"]["sha"]
             break
@@ -80,7 +77,7 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
 
             # 3. Add a Commit (PRs require a difference between branches)
             content_api.create_file(
-                owner=UserTestData.user_name,
+                owner=USERNAME,
                 repo=repo_name,
                 path=f"file_{i}.txt",
                 message=f"Initial commit for {branch_name}",
@@ -90,7 +87,7 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
 
             # 4. Create the Pull Request
             pr_resp = pr_api.create_pull_request(
-                owner=UserTestData.user_name,
+                owner=USERNAME,
                 repo=repo_name,
                 data={
                     "title": f"Pull Request for {branch_name}",
