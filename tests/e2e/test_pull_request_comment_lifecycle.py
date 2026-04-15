@@ -9,7 +9,7 @@ from utils import USERNAME
 logger = logging.getLogger(__name__)
 
 
-@pytest.mark.usefixtures("create_temporary_repo")
+@pytest.mark.usefixtures("feature_branch_ready_for_pr")
 @pytest.mark.repo_config(with_readme=True)
 class TestPullRequestCommentLifecycle(BaseTest):
 
@@ -29,11 +29,27 @@ class TestPullRequestCommentLifecycle(BaseTest):
         target_commit = [data for data in list_commit_resp.json() if data["author"]["login"] == USERNAME]
         commit_sha = target_commit[0]["sha"]
 
-        # ----------------------- create commit ----------------
+        # ----------------------- create commit comments----------------
         # owner, repo, commit_sha, content
-        create_commit_resp = self.commit_api.create_commit_comment(owner=USERNAME, repo=repo_name,commit_sha=commit_sha,
-                                                                   content="Create comment for a commit")
-        logger.info(f"create_commit_resp: {create_commit_resp.text}")
-        create_commit_resp.status_code = 201
+        create_commit_comment = self.commit_api.create_commit_comment(owner=USERNAME, repo=repo_name,
+                                                                      commit_sha=commit_sha,
+                                                                      content={"body": "Create commit comment"})
+        logger.info(f"create_commit_comment: {create_commit_comment.text}")
+        create_commit_comment.status_code = 201
 
+
+        # ----------------------- create commit comments----------------
+
+        get_commit_comment = self.commit_api.list_commit_comments(owner=USERNAME, repo=repo_name, commit_sha=commit_sha)
+        logger.info(f"get_commit_comment: {get_commit_comment.text}")
+        get_commit_comment.status_code = 200
+        commit_id = [item["id"] for item in get_commit_comment.json() if item["user"]["login"] == USERNAME]
+
+        # ----------------------- update commit comment ----------------
+        # update_commit_comment_resp = self.commit_api.update_commit_comment(owner=USERNAME, repo=repo_name,
+        #                                                                    comment_id=commit_id,
+        #                                                                    content="Update comment for a commit")
+        # logger.info(f"update_commit_comment_resp: {update_commit_comment_resp.text}")
+        # update_commit_comment_resp.status_code = 200
+        # update_commit_comment_resp.json()["body"] = "Update comment for a commit"
 

@@ -15,7 +15,7 @@ class CommitApi:
         return self.client.get(f"/repos/{owner}/{repo}/commits/{commit_sha}/comments")
 
     def update_commit_comment(self, owner, repo, comment_id, content):
-        return self.client.patch(f"/repos/{owner}/{repo}/comments/{comment_id}", data=content)
+        return self.client.patch(f"/repos/{owner}/{repo}/comments/{comment_id}", payload=content)
 
     def create_commit_comment(self, owner, repo, commit_sha, content):
         return self.client.post(f"/repos/{owner}/{repo}/commits/{commit_sha}/comments", payload=content)
