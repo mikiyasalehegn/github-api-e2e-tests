@@ -68,8 +68,3 @@ class TestPRReviewAssignmentFullFlow(BaseTest):
         logger.info(f"verify_pr_review is removed: {verify_pr_review.text}")
         assert verify_pr_review.status_code == 200
         assert verify_pr_review.json()["users"] == []
-
-
-
-
-
