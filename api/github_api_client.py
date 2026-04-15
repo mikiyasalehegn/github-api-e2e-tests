@@ -21,5 +21,5 @@ class GitHubClient:
     def put(self, endpoint, payload=None):
         return requests.put(self.base_url + endpoint, json=payload, headers=self.headers)
 
-    def delete(self, endpoint):
-        return requests.delete(self.base_url + endpoint, headers=self.headers)
+    def delete(self, endpoint, payload=None):
+        return requests.delete(self.base_url + endpoint, headers=self.headers, json=payload)
