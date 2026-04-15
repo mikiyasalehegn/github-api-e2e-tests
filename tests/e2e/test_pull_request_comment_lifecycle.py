@@ -43,13 +43,28 @@ class TestPullRequestCommentLifecycle(BaseTest):
         get_commit_comment = self.commit_api.list_commit_comments(owner=USERNAME, repo=repo_name, commit_sha=commit_sha)
         logger.info(f"get_commit_comment: {get_commit_comment.text}")
         get_commit_comment.status_code = 200
-        commit_id = [item["id"] for item in get_commit_comment.json() if item["user"]["login"] == USERNAME]
+        comment_id = [item["id"] for item in get_commit_comment.json() if item["user"]["login"] == USERNAME]
 
         # ----------------------- update commit comment ----------------
-        # update_commit_comment_resp = self.commit_api.update_commit_comment(owner=USERNAME, repo=repo_name,
-        #                                                                    comment_id=commit_id,
-        #                                                                    content="Update comment for a commit")
-        # logger.info(f"update_commit_comment_resp: {update_commit_comment_resp.text}")
-        # update_commit_comment_resp.status_code = 200
-        # update_commit_comment_resp.json()["body"] = "Update comment for a commit"
+        # owner, repo, comment_id, content
+        update_commit_comment_resp = self.commit_api.update_commit_comment(owner=USERNAME, repo=repo_name,
+                                                                           comment_id=comment_id[0],
+                                                                           content={"body": "Update comment for a commit"})
+        logger.info(f"update_commit_comment_resp: {update_commit_comment_resp.text}")
+        update_commit_comment_resp.status_code = 200
+        update_commit_comment_resp.json()["body"] = "Update comment for a commit"
+
+        # ----------------------- delete commit comment ----------------
+        delete_commit_comment_resp = self.commit_api.delete_commit_comment(owner=USERNAME, repo=repo_name,
+                                                                      comment_id=comment_id[0])
+        logger.info(f"delete_commit_comment: {delete_commit_comment_resp.text}")
+        delete_commit_comment_resp.status_code = 204
+
+
+        # ----------------------- verify commit comment is erased ----------------
+        get_commit_comment_resp = self.commit_api.get_commit_comment(owner=USERNAME, repo=repo_name,
+                                                                     comment_id=comment_id[0])
+        logger.info(f"get_commit_comment_resp: {get_commit_comment_resp.text}")
+        get_commit_comment_resp.status_code = 404
+
 
