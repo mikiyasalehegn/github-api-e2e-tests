@@ -24,8 +24,8 @@ class TestPRReviewAssignmentFullFlow(BaseTest):
                                                                           pr_number=pr_numbers)
         return get_pr_review_response
 
-    @pytest.mark.parametrize("number_of_branches", [1], indirect=True)
-    def test_pr_review_assignment_full_flow(self, number_of_branches, temporary_branches_with_prs, create_temporary_repo):
+    @pytest.mark.parametrize("temporary_branches_with_prs", [{"count": 1, "is_draft": False}], indirect=True)
+    def test_pr_review_assignment_full_flow(self, temporary_branches_with_prs, create_temporary_repo):
         branches, pr_numbers = temporary_branches_with_prs
         repo_name = create_temporary_repo
 

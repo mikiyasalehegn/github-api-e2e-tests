@@ -53,7 +53,7 @@ class TestPrCreateToDeleteHappyPathTests(BaseTest):
 
         # ---------------------- Update pr ------------------
         update_payload = {"title": PullRequestDataTest.updated_pr_title, "body": PullRequestDataTest.updated_pr_body}
-        update_pr_resp = self.pr_api.update_pull_request(owner=USERNAME, repo=repo_name, pr_number=pr_number,
+        update_pr_resp = self.pr_api.update_pull_request_branch(owner=USERNAME, repo=repo_name, pr_number=pr_number,
                                                          data=update_payload)
         logger.info(f"update_pr_resp data: {update_pr_resp.text}")
         update_pr_resp.status_code = 202
