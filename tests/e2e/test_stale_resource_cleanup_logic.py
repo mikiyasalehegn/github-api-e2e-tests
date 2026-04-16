@@ -19,8 +19,8 @@ class TestStaleResourceCleanupLogic(BaseTest):
         self.branch_api = BranchApi(self.client)
         self.pr_api = PullRequestApi(self.client)
 
-    @pytest.mark.parametrize("number_of_branches", [3], indirect=True)
-    def test_stale_resource_cleanup_logic(self, number_of_branches, temporary_branches_with_prs, create_temporary_repo):
+    @pytest.mark.parametrize("temporary_branches_with_prs", [{"count": 3, "is_draft": False}], indirect=True)
+    def test_stale_resource_cleanup_logic(self, temporary_branches_with_prs, create_temporary_repo):
         branches, pr_numbers = temporary_branches_with_prs
         repo_name = create_temporary_repo
 

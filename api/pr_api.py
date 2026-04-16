@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class PullRequestApi:
     def __init__(self, client):
         self.client = client
@@ -18,5 +21,8 @@ class PullRequestApi:
     def list_pr_files(self, owner, repo, pr_number):
         return self.client.get(f"/repos/{owner}/{repo}/pulls/{pr_number}/files")
 
-    def update_pull_request(self, owner, repo, pr_number, data):
+    def update_pull_request_branch(self, owner, repo, pr_number, data):
         return self.client.put(f"/repos/{owner}/{repo}/pulls/{pr_number}/update-branch", payload=data)
+
+    def update_pull_request(self, owner, repo, pr_number, data):
+        return self.client.patch(f"/repos/{owner}/{repo}/pulls/{pr_number}", payload=data)

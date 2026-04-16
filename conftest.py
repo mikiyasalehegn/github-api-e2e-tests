@@ -44,17 +44,20 @@ def create_temporary_repo(request):
 
 
 @pytest.fixture(scope='class')
-def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
+def temporary_branches_with_prs(create_temporary_repo, request):
+    params = getattr(request, "param", {})
+    number_of_branches = params.get("count", 1)
+    is_draft = params.get("is_draft", False)
+
     repo_name = create_temporary_repo
     client = GitHubClient(UserTestData.base_url, UserTestData.token)
     branch_api = BranchApi(client)
-    pr_api = PullRequestApi(client)  # Assuming you have a PR API class
-    content_api = ContentApi(client)  # Needed to create a commit
-    source_sha = None
+    pr_api = PullRequestApi(client)
+    content_api = ContentApi(client)
 
-    # 1. Get Base SHA with a small retry or wait
-    max_retries = 3
-    for i in range(max_retries):
+    # 1. Get Base SHA (with retry)
+    source_sha = None
+    for _ in range(3):
         sha_resp = branch_api.get_branch_sha(owner=USERNAME, repo=repo_name)
         if sha_resp.status_code == 200:
             source_sha = sha_resp.json()["object"]["sha"]
@@ -66,34 +69,29 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
 
     try:
         for i in range(number_of_branches):
-            branch_name = f"feature-pr-{i}"
+            branch_name = f"test-branch-{i}-{uuid.uuid4().hex[:4]}"
 
             # 2. Create the Branch
             branch_api.create_branch(
-                owner=UserTestData.user_name,
-                repo=repo_name,
+                owner=USERNAME, repo=repo_name,
                 data={"ref": f"refs/heads/{branch_name}", "sha": source_sha}
             ).raise_for_status()
 
-            # 3. Add a Commit (PRs require a difference between branches)
+            # 3. Add a Commit
             content_api.create_file(
-                owner=USERNAME,
-                repo=repo_name,
-                path=f"file_{i}.txt",
-                message=f"Initial commit for {branch_name}",
-                content=f"Unique content for branch {i}",
-                branch=branch_name
+                owner=USERNAME, repo=repo_name, path=f"file_{i}.txt",
+                message="setup", content="hello", branch=branch_name
             ).raise_for_status()
 
-            # 4. Create the Pull Request
+            # 4. Create PR with the dynamic 'draft' flag
             pr_resp = pr_api.create_pull_request(
-                owner=USERNAME,
-                repo=repo_name,
+                owner=USERNAME, repo=repo_name,
                 data={
-                    "title": f"Pull Request for {branch_name}",
+                    "title": f"Test PR {i}",
                     "head": branch_name,
                     "base": "main",
-                    "body": "This is an automated test PR."
+                    "draft": is_draft,
+                    "body": "Automated test"
                 }
             )
             pr_resp.raise_for_status()
@@ -104,18 +102,16 @@ def temporary_branches_with_prs(create_temporary_repo, number_of_branches):
         yield created_branches, created_pr_numbers
 
     finally:
-        # Cleanup: Deleting the branch automatically closes/cleans up the PR
         for branch in created_branches:
-            branch_api.delete_branch(owner=UserTestData.user_name, repo=repo_name, branch_name=branch)
+            branch_api.delete_branch(owner=USERNAME, repo=repo_name, branch_name=branch)
 
-
-@pytest.fixture(scope='class')
-def number_of_branches(request):
-    """
-    This is the missing link. It takes the value from the
-    parametrize decorator and provides it to your other fixtures.
-    """
-    return request.param
+# @pytest.fixture(scope='class')
+# def number_of_branches(request):
+#     """
+#     This is the missing link. It takes the value from the
+#     parametrize decorator and provides it to your other fixtures.
+#     """
+#     return request.param
 
 
 @pytest.fixture
