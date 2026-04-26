@@ -9,3 +9,4 @@ from .pr_api import PullRequestApi
 from .content_api import ContentApi
 from .commit_api import CommitApi
 from .pr_review_api import PullRequestReviewAPI
+from .pr_comment_api import PrCommentApi
