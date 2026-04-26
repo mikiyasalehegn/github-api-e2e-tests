@@ -26,3 +26,6 @@ class PullRequestApi:
 
     def update_pull_request(self, owner, repo, pr_number, data):
         return self.client.patch(f"/repos/{owner}/{repo}/pulls/{pr_number}", payload=data)
+
+    def approve_pull_request(self, owner, repo, pr_number, data):
+        return self.client.post(f"/repos/{owner}/{repo}/pulls/{pr_number}/reviews", payload=data)
