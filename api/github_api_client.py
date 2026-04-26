@@ -9,8 +9,8 @@ class GitHubClient:
             "Accept": "application/vnd.github+json"
         }
 
-    def get(self, endpoint):
-        return requests.get(self.base_url + endpoint, headers=self.headers)
+    def get(self, endpoint, data=None):
+        return requests.get(self.base_url + endpoint, headers=self.headers, data=data)
 
     def post(self, endpoint, payload):
         return requests.post(self.base_url + endpoint, json=payload, headers=self.headers)
