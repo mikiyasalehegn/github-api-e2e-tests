@@ -105,14 +105,6 @@ def temporary_branches_with_prs(create_temporary_repo, request):
         for branch in created_branches:
             branch_api.delete_branch(owner=USERNAME, repo=repo_name, branch_name=branch)
 
-# @pytest.fixture(scope='class')
-# def number_of_branches(request):
-#     """
-#     This is the missing link. It takes the value from the
-#     parametrize decorator and provides it to your other fixtures.
-#     """
-#     return request.param
-
 
 @pytest.fixture
 def feature_branch_ready_for_pr(create_temporary_repo):
