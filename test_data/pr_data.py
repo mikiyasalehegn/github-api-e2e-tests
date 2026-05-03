@@ -11,3 +11,4 @@ class PullRequestDataTest:
     default_commit_comment = "Create commit comment"
     updated_commit_comment = "Update commit comment"
     pr_title_with_conflict = "Pull request merge conflict"
+    closed_pr_title= "branch deletion closes associated prs"

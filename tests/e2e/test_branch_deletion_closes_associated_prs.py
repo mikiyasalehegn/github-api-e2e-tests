@@ -5,6 +5,7 @@ from base import BaseTest
 from models import CreateBranchTestData
 from test_data import PullRequestDataTest
 from utils import USERNAME
+from models import CreatePrPayload
 import logging
 
 
@@ -44,13 +45,9 @@ class TestBranchDeletionClosesAssociatedPRs(BaseTest):
         assert update_readme_branch_a.status_code == 200
 
         # ------------------------- create pr for the -------------------------
-        payload = {
-                    "title": "branch deletion closes associated prs",
-                    "head": branch_name,
-                    "base": "main",
-                    "body": PullRequestDataTest.pr_body
-                }
-        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload)
+        payload = CreatePrPayload(title=PullRequestDataTest.closed_pr_title, head=branch_name, base="main",
+                                  body=PullRequestDataTest.pr_body)
+        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload.to_dict())
         logger.info(f"pr_response data: {pr_response.text}")
         pr_response.status_code = 201
 
