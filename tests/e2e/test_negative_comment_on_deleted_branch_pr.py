@@ -47,5 +47,4 @@ class TestNegativeCommentOnDeleteBranchPr(BaseTest):
         logger.info(f"add_pr_review_comment: {add_pr_review_comment.text}")
         assert add_pr_review_comment.status_code == 422
         assert "Validation Failed" in add_pr_review_comment.json()["message"]
-        assert "pull_request_review_thread.path" in add_pr_review_comment.json()["errors"][0]["field"]
-
+        assert "pull_request_review_thread.path" in add_pr_review_comment.json()["errors"][0]["field"] # make sure the api couldn't find the path

@@ -8,3 +8,6 @@ class PullRequestDataTest:
     pr_title = "Pr Title"
     updated_pr_title = "Updated Title"
     updated_pr_body = "Updated Body"
+    default_commit_comment = "Create commit comment"
+    updated_commit_comment = "Update commit comment"
+    pr_title_with_conflict = "Pull request merge conflict"

@@ -45,6 +45,7 @@ class TestWebhookFlow(BaseTest):
 
 
         # -------------------- Test update webhook --------------------
+        # add events like pull_request, push, issues
         update_resp = self.webhook_api.update_github_webhook(owner=USERNAME, repo=repository_name,
                                                              hook_id=webhook_resp.id, data=update_webhook_data)
         update_webhook_resp = UpdateWebhookResponse(update_resp.json())
@@ -58,7 +59,6 @@ class TestWebhookFlow(BaseTest):
 
         # -------------------- Test ping webhook --------------------
         ping_resp = self.webhook_api.ping_webhook(owner=USERNAME, repo=repository_name, hook_id=self.webhook_id)
-        print(f"Ping[{self.webhook_id}] response: {ping_resp}")
         assert ping_resp.status_code == 204
 
         # -------------------- Test delete webhook --------------------
@@ -67,7 +67,7 @@ class TestWebhookFlow(BaseTest):
         delete_webhook_resp.status_code = 204
 
 
-        # --------------------Verify the webhook is deleted --------------------Verify
+        # --------------------Verify the webhook is deleted --------------------
         get_webhook_resp = self.webhook_api.get_github_webhook(owner=USERNAME, repo=repository_name,
                                                                hook_id=self.webhook_id)
         get_webhook_resp.status_code = 404
