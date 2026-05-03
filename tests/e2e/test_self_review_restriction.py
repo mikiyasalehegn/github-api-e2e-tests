@@ -2,7 +2,7 @@ import time
 import pytest
 from api import ContentApi, BranchApi, PullRequestApi
 from base import BaseTest
-from models.pullrequest_model.pr_payload_model import CreatePrPayload
+from models import CreatePrPayload
 from test_data import PullRequestDataTest
 from utils import USERNAME
 import logging
@@ -34,7 +34,7 @@ class TestSelfReviewRestriction(BaseTest):
         # ---------------------- Create pr ----------------------
         payload = CreatePrPayload(title=PullRequestDataTest.default_title, head=branch_name, base="main",
                                   body=PullRequestDataTest.pr_body)
-        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload)
+        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload.to_dict())
         pr_response.status_code = 201
         pr_response.json()["state"] = "open"
         pr_response.json()["title"] = PullRequestDataTest.default_title
