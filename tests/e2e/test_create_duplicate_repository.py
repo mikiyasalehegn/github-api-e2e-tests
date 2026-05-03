@@ -1,6 +1,6 @@
 from api import RepositoryApi
 from base import BaseTest
-from models.repo_data_schema.repo_testing_data import CreateRepoData
+from models import CreateRepoData
 from test_data import RepoTestData
 import logging
 from utils import USERNAME
