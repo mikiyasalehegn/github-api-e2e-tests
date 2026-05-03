@@ -61,5 +61,6 @@ class TestRepoLifecycle(BaseTest):
         assert response.status_code == 204
 
         # assert using get repo request
+        time.sleep(1)
         resp = self.repo_api.get_repository(owner=UserTestData.user_name, repo=RepoTestData.new_repo_name)
         assert resp.status_code == 404
