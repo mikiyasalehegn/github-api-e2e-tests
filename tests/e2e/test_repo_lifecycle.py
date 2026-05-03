@@ -2,7 +2,7 @@ import time
 from base import BaseTest
 from api import RepositoryApi
 from models import CreateRepoData, create_repo_schema, CreateRepoResponse, UpdateRepoData
-from models.repo_data_schema.repo_testing_data import GetRepoResponse
+from models.repo_data_model.repo_data_model import GetRepoResponse
 from test_data import RepoTestData, UserTestData
 from utils import assert_data_schema, slow_down
 

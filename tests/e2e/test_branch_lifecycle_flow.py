@@ -3,7 +3,7 @@ import pytest
 import logging
 from api import BranchApi
 from base import BaseTest
-from models.branch_test_data.branch_test_data import BranchTestData, CreateBranchTestData
+from models.branch_data_model.branch_data_model import BranchTestData, CreateBranchTestData
 from utils import USERNAME
 
 logger = logging.getLogger(__name__)
