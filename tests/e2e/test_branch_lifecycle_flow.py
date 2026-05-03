@@ -60,8 +60,6 @@ class TestBranchLifecycleFlow(BaseTest):
 
 
         # -------------------- Merge Branch --------------------
-        # payload = MergeBranchPayload(base=BranchTestData.base_branch_name, head=BranchTestData.new_branch_name,
-        #                              commit_message=BranchTestData.commit_message)
         merge_branch_resp = self.branch_api.merge_branch(owner=USERNAME, repo=branch_temp_repo, data={
             "base": "main", "head": BranchTestData.new_branch_name, "commit_message": BranchTestData.commit_message
         })

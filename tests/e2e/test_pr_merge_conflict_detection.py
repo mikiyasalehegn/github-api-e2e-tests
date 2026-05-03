@@ -2,7 +2,8 @@ import time
 import pytest
 from api import PullRequestApi, BranchApi, ContentApi
 from base import BaseTest
-from models.branch_test_data.branch_test_data import CreateBranchTestData, BranchTestData
+from models.branch_test_data.branch_test_data import CreateBranchTestData
+from models.pullrequest_model.pr_payload_model import CreatePrPayload
 from test_data import PullRequestDataTest
 from utils import USERNAME
 import logging
@@ -54,7 +55,7 @@ class TestPRMergeConflictDetection(BaseTest):
         logger.info(f"update_readme_branch_a data: {update_readme_branch_b.text}")
         assert update_readme_branch_a.status_code == 200
 
-        # ------------------------- merge branch_a to main -------------------------
+        # ------------------------- merge branch_a into main -------------------------
         payload = {
             "base": "main", "head": "branch_a", "commit_message": "merging branch_a into main"
         }
@@ -62,13 +63,9 @@ class TestPRMergeConflictDetection(BaseTest):
         logger.info(f"merge_branch_a_resp data: {merge_branch_a_resp.text}")
 
         # ------------------------- create pr for branch_b -------------------------
-        payload = {
-                    "title": "Pull request merge conflict",
-                    "head": "branch_b",
-                    "base": "main",
-                    "body": PullRequestDataTest.pr_body
-                }
-        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload)
+        payload = CreatePrPayload(title=PullRequestDataTest.pr_title_with_conflict, head="branch_b", base="main",
+                                  body=PullRequestDataTest.pr_body)
+        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload.to_dict())
         logger.info(f"pr_response data: {pr_response.text}")
         pr_response.status_code = 201
         pr_number = pr_response.json()["number"]
@@ -78,5 +75,3 @@ class TestPRMergeConflictDetection(BaseTest):
         logger.info(f"merge_pr_resp data: {merge_pr_resp.text}")
         assert merge_pr_resp.status_code == 405
         assert merge_pr_resp.json()["message"] == "Pull Request has merge conflicts"
-
-

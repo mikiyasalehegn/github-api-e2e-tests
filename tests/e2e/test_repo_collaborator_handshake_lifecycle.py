@@ -44,7 +44,6 @@ class TestRepoCollaboratorHandshakeFlow(BaseTest):
         self.check_repo_collaborators(expected_collabs=1, repo_name=collab_temp_repo)
 
         # -------------------- Add repo collaborators --------------------
-
         add_repo_collab_response = self.repo_collab_api.add_repo_collaborator(owner=USERNAME, repo=collab_temp_repo,
                                                                               username=COLLABORATOR)
         logger.info(f"add_repo_collaborator response: {add_repo_collab_response.text}")
@@ -53,7 +52,6 @@ class TestRepoCollaboratorHandshakeFlow(BaseTest):
         invitation_id=add_repo_collab_response.json()["id"]
 
         # -------------------- Accept invitation --------------------
-
         invitation_client = self.get_client(token=COLLABORATOR_TOKEN)
         accept_invitation_api = InvitationApi(invitation_client)
         accept_invitation_response = accept_invitation_api.accept_invitation(invitation_id=invitation_id)
@@ -63,12 +61,11 @@ class TestRepoCollaboratorHandshakeFlow(BaseTest):
 
         # -------------------- check if the collaborator is added --------------------
         collaborators = self.check_repo_collaborators(expected_collabs=2, repo_name=collab_temp_repo,
-                                                      iscollabadded = True)
+                                                      iscollabadded=True)
         assert USERNAME in collaborators
         assert COLLABORATOR in collaborators
 
         # -------------------- Remove repo collaborator --------------------
-
         remove_repo_collab_response = self.repo_collab_api.remove_repo_collaborator(owner=USERNAME, repo=collab_temp_repo,
                                                                                     username=COLLABORATOR)
         assert remove_repo_collab_response.status_code == 204

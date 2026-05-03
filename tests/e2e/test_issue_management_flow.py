@@ -66,7 +66,6 @@ class TestIssueManagementFlow(BaseTest):
         logger.info(f"Update issue response {response.text}")
         assert response.status_code == 200
         assert_data_schema(response, update_issue_response_schema)
-        # check.equal(update_issue_response.title, IssueTestData.new_title) # Updating title has a bug
         assert update_issue_response.body == IssueTestData.new_body
         assert update_issue_response.labels[0]["name"] == IssueTestData.new_label[0]
 

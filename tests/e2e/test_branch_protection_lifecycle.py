@@ -61,4 +61,3 @@ class TestBranchProtectionLifecycle(BaseTest):
         logger.info(f"get_branch_protection_resp data: {get_branch_protection_resp.text}")
         assert get_branch_protection_resp.status_code == 404
         assert get_branch_protection_resp.json()["message"] == "Branch not protected"
-

@@ -2,6 +2,7 @@ import pytest
 import logging
 from api.commit_api import CommitApi
 from base import BaseTest
+from test_data import PullRequestDataTest
 from utils import USERNAME
 
 
@@ -30,29 +31,26 @@ class TestPullRequestCommentLifecycle(BaseTest):
         commit_sha = target_commit[0]["sha"]
 
         # ----------------------- create commit comments----------------
-        # owner, repo, commit_sha, content
         create_commit_comment = self.commit_api.create_commit_comment(owner=USERNAME, repo=repo_name,
                                                                       commit_sha=commit_sha,
-                                                                      content={"body": "Create commit comment"})
+                                                                      content={"body": PullRequestDataTest.default_commit_comment})
         logger.info(f"create_commit_comment: {create_commit_comment.text}")
         create_commit_comment.status_code = 201
 
 
         # ----------------------- create commit comments----------------
-
         get_commit_comment = self.commit_api.list_commit_comments(owner=USERNAME, repo=repo_name, commit_sha=commit_sha)
         logger.info(f"get_commit_comment: {get_commit_comment.text}")
         get_commit_comment.status_code = 200
         comment_id = [item["id"] for item in get_commit_comment.json() if item["user"]["login"] == USERNAME]
 
         # ----------------------- update commit comment ----------------
-        # owner, repo, comment_id, content
         update_commit_comment_resp = self.commit_api.update_commit_comment(owner=USERNAME, repo=repo_name,
                                                                            comment_id=comment_id[0],
-                                                                           content={"body": "Update comment for a commit"})
+                                                                           content={"body": PullRequestDataTest.updated_commit_comment})
         logger.info(f"update_commit_comment_resp: {update_commit_comment_resp.text}")
         update_commit_comment_resp.status_code = 200
-        update_commit_comment_resp.json()["body"] = "Update comment for a commit"
+        update_commit_comment_resp.json()["body"] = PullRequestDataTest.updated_commit_comment
 
         # ----------------------- delete commit comment ----------------
         delete_commit_comment_resp = self.commit_api.delete_commit_comment(owner=USERNAME, repo=repo_name,

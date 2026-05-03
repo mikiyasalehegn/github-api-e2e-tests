@@ -2,7 +2,9 @@ import time
 import pytest
 from api import PullRequestApi, ContentApi, BranchApi
 from base import BaseTest
-from utils import USERNAME
+from models.pullrequest_model.pr_payload_model import CreatePrPayload
+from models.pullrequest_model.pull_request_data_schema import create_pr_schema
+from utils import USERNAME, assert_data_schema
 from test_data import PullRequestDataTest
 import logging
 
@@ -34,13 +36,11 @@ class TestPrCreateToDeleteHappyPathTests(BaseTest):
         time.sleep(1)
 
         # ---------------------- Create pr ----------------------
-        payload = {
-                    "title": PullRequestDataTest.default_title,
-                    "head": branch_name,
-                    "base": "main",
-                    "body": PullRequestDataTest.pr_body
-                }
-        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload)
+        payload = CreatePrPayload(title=PullRequestDataTest.default_title, head=branch_name, base="main",
+                                  body=PullRequestDataTest.pr_body)
+        pr_response = self.pr_api.create_pull_request(owner=USERNAME, repo=repo_name, data=payload.to_dict())
+        assert_data_schema(pr_response, create_pr_schema)
+        logger.info(f"Created PR data: {pr_response.text}")
         pr_response.status_code = 201
         pr_response.json()["state"] = "open"
         pr_response.json()["title"] = PullRequestDataTest.default_title
@@ -76,6 +76,3 @@ class TestPrCreateToDeleteHappyPathTests(BaseTest):
         # -------------------- Check a branch is erased --------------------
         get_branch_resp = self.branch_api.get_branch(owner=USERNAME, repo=repo_name, branch=branch_name)
         assert get_branch_resp.status_code == 404
-
-
-
