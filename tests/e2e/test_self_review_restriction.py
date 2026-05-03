@@ -2,7 +2,7 @@ import time
 import pytest
 from api import ContentApi, BranchApi, PullRequestApi
 from base import BaseTest
-from models.pullrequest_model.pr_payload_model import CreatePrPayload
+from models import CreatePrPayload
 from test_data import PullRequestDataTest
 from utils import USERNAME
 import logging

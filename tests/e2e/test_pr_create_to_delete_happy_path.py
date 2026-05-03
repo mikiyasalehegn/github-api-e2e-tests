@@ -2,8 +2,8 @@ import time
 import pytest
 from api import PullRequestApi, ContentApi, BranchApi
 from base import BaseTest
-from models.pullrequest_model.pr_payload_model import CreatePrPayload
-from models.pullrequest_model.pull_request_data_schema import create_pr_schema
+from models import CreatePrPayload
+from models import create_pr_schema
 from utils import USERNAME, assert_data_schema
 from test_data import PullRequestDataTest
 import logging

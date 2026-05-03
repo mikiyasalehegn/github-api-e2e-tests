@@ -24,3 +24,5 @@ from .branch_test_data.branch_test_data import BranchTestResponse
 from .branch_test_data.branch_test_data import CreateBranchTestData
 from .branch_test_data.branch_test_data import MergeBranchPayload
 from .branch_test_data.branch_data_schema import update_branch_protection_schema
+from .pullrequest_model.pr_payload_model import CreatePrPayload
+from .pullrequest_model.pull_request_data_schema import create_pr_schema
