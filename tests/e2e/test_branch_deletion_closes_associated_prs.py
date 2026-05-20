@@ -63,4 +63,3 @@ class TestBranchDeletionClosesAssociatedPRs(BaseTest):
         logger.info(f"get_pr_resp data: {get_pr_resp.text}")
         assert get_pr_resp.status_code == 200
         assert get_pr_resp.json()["state"] == "closed"
-
