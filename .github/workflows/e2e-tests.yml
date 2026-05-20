@@ -1,11 +1,14 @@
 name: E2E Tests
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    # This line ensures the job runs ONLY if 'run test' is in the PR title
+    if: contains(github.event.pull_request.title, 'run test')
 
     env:
       TOKEN: ${{ secrets.TOKEN }}
