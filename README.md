@@ -1,5 +1,17 @@
 # GitHub API E2E Tests
 
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
+![Pytest](https://img.shields.io/badge/Pytest-Testing-green?logo=pytest)
+![Requests](https://img.shields.io/badge/Requests-HTTP-orange)
+![GitHub API](https://img.shields.io/badge/GitHub-REST_API-black?logo=github)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-blue?logo=githubactions)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-Automation-2088FF?logo=githubactions)
+![Slack](https://img.shields.io/badge/Slack-Notifications-4A154B?logo=slack)
+![JSON Schema](https://img.shields.io/badge/JSON-Schema-red)
+![HTML Reports](https://img.shields.io/badge/Reports-HTML-success)
+![E2E Testing](https://img.shields.io/badge/Testing-E2E-yellow)
+![Automation](https://img.shields.io/badge/QA-Automation-brightgreen)
+
 End-to-end API automation framework for testing GitHub workflows using Python, Pytest, and GitHub REST APIs.
 
 This project focuses on real-world GitHub scenarios such as:
