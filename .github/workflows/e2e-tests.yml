@@ -4,9 +4,7 @@ on:
   push:
 
 jobs:
-
   test:
-
     runs-on: ubuntu-latest
 
     env:
@@ -19,7 +17,6 @@ jobs:
       READ_ONLY_TOKEN: ${{ secrets.READ_ONLY_TOKEN }}
 
     steps:
-
       - name: Download project
         uses: actions/checkout@v4
 
@@ -31,17 +28,20 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install jsonschema allure-pytest  # Added missing validation & report packages
 
       - name: Slack Start Notification
         run: |
           curl -X POST -H 'Content-type: application/json' \
           --data '{
-            "text":" E2E pipeline started\n🔗 Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "text":"🚀 E2E pipeline started\n🔗 Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run tests
         run: |
           mkdir -p reports
+          # 'set -o pipefail' ensures that if pytest fails, the whole step fails
+          set -o pipefail
           pytest tests/e2e -v --html=reports/e2e-report.html --self-contained-html | tee reports/pytest_output.txt
 
       - name: Slack Success Notification
@@ -56,8 +56,8 @@ jobs:
       - name: Slack Failure Notification
         if: failure()
         run: |
-
-          FAILED_TESTS=$(grep FAILED pytest_output.txt || true)
+          # Read from the correct relative path where tee saved it
+          FAILED_TESTS=$(grep FAILED reports/pytest_output.txt || true)
 
           curl -X POST -H 'Content-type: application/json' \
           --data "{
@@ -66,7 +66,8 @@ jobs:
           ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Upload report
+        if: always() # Upload the report even if the tests failed!
         uses: actions/upload-artifact@v4
         with:
           name: e2e-test-report
-          path: report.html
+          path: reports/e2e-report.html # Fixed path matching where pytest actually saved it
