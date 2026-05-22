@@ -347,6 +347,68 @@ The report is uploaded as a downloadable GitHub Actions artifact.
 
 ---
 
+---
+
+## ✅ Dynamic Resource Management with Fixtures
+
+The framework heavily uses Pytest fixtures to dynamically create and manage temporary GitHub resources during test execution.
+
+Fixtures help:
+- Reduce duplicated setup logic
+- Improve test isolation
+- Keep tests independent
+- Automatically clean up resources
+
+---
+
+## ✅ Temporary Resources Created by Fixtures
+
+Fixtures can dynamically create:
+- Temporary repositories
+- Temporary branches
+- Pull requests
+
+This allows fully isolated E2E execution without relying on manually created test data.
+
+---
+
+## ✅ Automatic Cleanup
+
+Fixtures also handle teardown operations automatically.
+
+Examples:
+- Delete temporary repositories
+- Remove temporary branches
+- remove pull requests
+
+This prevents stale resources from remaining in the GitHub account.
+
+---
+
+## ✅ Example Fixture
+Check the full fixture code in conftest.py. The following example is a shorthand version to show how it looks.
+
+```python
+@pytest.fixture
+def create_temporary_repo(repository_api):
+
+    repository_name = f"test-repo-{uuid.uuid4()}"
+
+    repo_api.create_repo_for_authenticated_user(payload)
+    
+    ...............
+
+    yield repository_name
+
+    repository_api.delete_repo(repo_name)
+```
+
+This fixture:
+1. Creates a temporary repository
+2. Provides it to the test
+3. Automatically deletes it after execution
+
+
 # 🧱 Framework Design Principles
 
 This framework follows:
